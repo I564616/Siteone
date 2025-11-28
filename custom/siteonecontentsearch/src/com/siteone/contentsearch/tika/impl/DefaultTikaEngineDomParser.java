@@ -19,6 +19,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -73,7 +74,7 @@ public class DefaultTikaEngineDomParser implements TikaEngineDomParser
 			HttpEntity entity = null;
 
 			final CloseableHttpClient client = HttpClients.custom().build();
-			HttpResponse response;
+            ClassicHttpResponse response;
 			response = client.execute(httpget);
 			entity = response.getEntity();
 			if (entity != null)
