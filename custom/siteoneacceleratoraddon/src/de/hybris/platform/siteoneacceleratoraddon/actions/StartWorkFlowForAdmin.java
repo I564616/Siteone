@@ -11,6 +11,7 @@
 package de.hybris.platform.siteoneacceleratoraddon.actions;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.PredicateUtils;
