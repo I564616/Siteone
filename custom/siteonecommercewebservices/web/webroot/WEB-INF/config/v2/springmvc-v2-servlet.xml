@@ -33,6 +33,7 @@
 
     <cache:annotation-driven cache-manager="compositeWsCacheManager" key-generator="commerceCacheKeyGenerator"/>
 
+    <mvc:default-servlet-handler />
     <mvc:interceptors>
         <bean class="de.hybris.platform.webservicescommons.interceptors.CacheControlHandlerInterceptor"/>
     </mvc:interceptors>
@@ -60,4 +61,6 @@
             </map>
         </constructor-arg>
     </bean>
+    <alias name="defaultWsDateFormatter" alias="wsDateFormatter" />
+    <bean id="defaultWsDateFormatter" class="de.hybris.platform.ycommercewebservices.formatters.impl.DefaultWsDateFormatter" />
 </beans>
