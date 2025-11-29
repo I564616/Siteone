@@ -156,15 +156,20 @@
 	
 	<!-- END Uncomment to make v1 version available -->
 
-	<servlet>
-		<servlet-name>springmvc</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>WEB-INF/config/common/springmvc-servlet.xml</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>
+                WEB-INF/config/common/springmvc-servlet.xml
+                WEB-INF/config/common/security-spring.xml
+            </param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
 	<servlet-mapping>
 		<servlet-name>springmvc</servlet-name>
@@ -219,6 +224,15 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>
 				com.siteone.v2.config.WebConfig
+                WEB-INF/config/v2/springmvc-v2-servlet.xml
+                WEB-INF/config/v2/security-v2-spring.xml
+                WEB-INF/config/v2/filter-config-v2-spring.xml
+                WEB-INF/config/v2/error-config-v2-spring.xml
+                WEB-INF/config/v2/validators-v2-spring.xml
+                WEB-INF/config/v2/jaxb-converters-spring.xml
+                WEB-INF/config/v2/dto-mappings-v2-spring.xml
+                WEB-INF/config/v2/dto-level-mappings-v2-spring.xml
+                WEB-INF/config/v2/v2-web-spring.xml
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
