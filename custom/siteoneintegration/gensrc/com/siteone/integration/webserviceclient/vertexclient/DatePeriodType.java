@@ -7,7 +7,7 @@
 
 package com.siteone.integration.webserviceclient.vertexclient;
 
-import jakarta.xml.datatype.XMLGregorianCalendar;
+import javax.xml.datatype.XMLGregorianCalendar;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;

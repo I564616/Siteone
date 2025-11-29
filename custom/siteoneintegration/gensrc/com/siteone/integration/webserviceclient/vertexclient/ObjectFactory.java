@@ -9,7 +9,7 @@ package com.siteone.integration.webserviceclient.vertexclient;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import jakarta.xml.namespace.QName;
+import javax.xml.namespace.QName;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.annotation.XmlElementDecl;
 import jakarta.xml.bind.annotation.XmlRegistry;

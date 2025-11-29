@@ -17,7 +17,7 @@ import de.hybris.platform.b2b.punchout.PunchOutUtils;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.MarshalException;
 import jakarta.xml.bind.Marshaller;
-import javax.xml.transform.Result;
+import jakarta.xml.transform.Result;
 
 import org.cxml.CXML;
 import org.springframework.http.HttpHeaders;
