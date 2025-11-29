@@ -1,8 +1,8 @@
 package com.siteone.integration.services.ue.impl;
 
 import jakarta.annotation.Resource;
-import jakarta.crypto.Mac;
-import jakarta.crypto.spec.SecretKeySpec;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
