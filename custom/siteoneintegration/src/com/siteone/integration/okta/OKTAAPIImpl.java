@@ -28,11 +28,11 @@ import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.TokenRequest;
+//import org.springframework.security.oauth2.common.OAuth2AccessToken;
+//import org.springframework.security.oauth2.provider.ClientDetails;
+//import org.springframework.security.oauth2.provider.ClientDetailsService;
+//import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+//import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -54,8 +54,8 @@ import jakarta.annotation.Resource;
 public class OKTAAPIImpl implements OKTAAPI {
 
     private static final Logger log = Logger.getLogger(OKTAAPIImpl.class);
-    private ClientDetailsService clientDetailsService;
-    private OAuth2RequestFactory smarteditOAuth2RequestFactory;
+//    private ClientDetailsService clientDetailsService;
+//    private OAuth2RequestFactory smarteditOAuth2RequestFactory;
     private static final String AUTH_ENDPOINT = "/api/v1/authn";
     private static final String SESSION_ENDPOINT = "/api/v1/sessions?additionalFields=cookieToken";
     private static final String USER_ENDPOINT = "/api/v1/users/";
@@ -950,47 +950,61 @@ public class OKTAAPIImpl implements OKTAAPI {
 	}
 
 	@Override
-	public void getOAuth(String uid, String plainPassword) {
-		sessionService.setAttribute("agroWebEnabled",false);
-		String url = Config.getString(SiteoneintegrationConstants.AGRO_AI_API,StringUtils.EMPTY);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add(SiteoneintegrationConstants.CLIENT_ID, Config.getString("agro.ai.client.id", StringUtils.EMPTY));
-		map.add(SiteoneintegrationConstants.CLIENT_SECRET,Config.getString("agro.ai.client.secret", StringUtils.EMPTY));
+    public void getOAuth(String uid, String plainPassword) {
 
-		map.add(SiteoneintegrationConstants.GRANT_TYPE, Config.getString("agro.ai.grant.type", StringUtils.EMPTY));
-		map.add(SiteoneintegrationConstants.USER_NAME,uid);
-		map.add(SiteoneintegrationConstants.PASSWORD,plainPassword);
-	
-		
-		HttpEntity<MultiValueMap<String, String>> requestEntity= 
-		new HttpEntity<>(map, headers);
-		try{
-		 OAuth2AccessToken res = getRestTemplate().postForObject(url, requestEntity, OAuth2AccessToken.class);		 
-		 sessionService.setAttribute("refreshToken",res.getRefreshToken().getValue());
-		}
-		catch(Exception e){
-			log.error("exception on Oauth "+ e);
-		}
-	}
+        sessionService.setAttribute("agroWebEnabled", false);
+
+        String url = Config.getString(SiteoneintegrationConstants.AGRO_AI_API, StringUtils.EMPTY);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        // ---- NEW: Must be inside body as per Spring Security 6 ---- //
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("client_id", Config.getString("agro.ai.client.id", StringUtils.EMPTY));
+        formData.add("client_secret", Config.getString("agro.ai.client.secret", StringUtils.EMPTY));
+
+        // Your implementation uses a password-style flow, not OAuth password grant
+        // Keeping it but using plain REST call (Spring OAuth removed)
+        formData.add("grant_type", Config.getString("agro.ai.grant.type", "client_credentials"));
+        formData.add("username", uid);
+        formData.add("password", plainPassword);
+
+        HttpEntity<MultiValueMap<String, String>> entity =
+                new HttpEntity<>(formData, headers);
+
+        try {
+
+            // ---- NEW: Expect generic response rather than OAuth2AccessToken ---- //
+            Map<String, Object> tokenResponse =
+                    getRestTemplate().postForObject(url, entity, Map.class);
+
+            if (tokenResponse != null && tokenResponse.get("refresh_token") != null) {
+                sessionService.setAttribute("refreshToken", tokenResponse.get("refresh_token"));
+            }
+
+        } catch (Exception ex) {
+            log.error("Exception while fetching OAuth token: ", ex);
+        }
+    }
 
 
-	public ClientDetailsService getClientDetailsService() {
-		return clientDetailsService;
-	}
 
-	public void setClientDetailsService(ClientDetailsService clientDetailsService) {
-		this.clientDetailsService = clientDetailsService;
-	}
-
-	public OAuth2RequestFactory getSmarteditOAuth2RequestFactory() {
-		return smarteditOAuth2RequestFactory;
-	}
-
-	public void setSmarteditOAuth2RequestFactory(OAuth2RequestFactory smarteditOAuth2RequestFactory) {
-		this.smarteditOAuth2RequestFactory = smarteditOAuth2RequestFactory;
-	}
+//    public ClientDetailsService getClientDetailsService() {
+//		return clientDetailsService;
+//	}
+//
+//	public void setClientDetailsService(ClientDetailsService clientDetailsService) {
+//		this.clientDetailsService = clientDetailsService;
+//	}
+//
+//	public OAuth2RequestFactory getSmarteditOAuth2RequestFactory() {
+//		return smarteditOAuth2RequestFactory;
+//	}
+//
+//	public void setSmarteditOAuth2RequestFactory(OAuth2RequestFactory smarteditOAuth2RequestFactory) {
+//		this.smarteditOAuth2RequestFactory = smarteditOAuth2RequestFactory;
+//	}
 
     @Override
     public Boolean suspendUser(String userId) {
