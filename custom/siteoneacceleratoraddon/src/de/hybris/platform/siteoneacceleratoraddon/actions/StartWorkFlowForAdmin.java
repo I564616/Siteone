@@ -40,7 +40,6 @@ import de.hybris.platform.workflow.WorkflowService;
 import de.hybris.platform.workflow.model.WorkflowModel;
 import de.hybris.platform.workflow.model.WorkflowTemplateModel;
 
-
 public class StartWorkFlowForAdmin extends AbstractSimpleB2BApproveOrderDecisionAction
 {
 	private static final Logger LOG = Logger.getLogger(StartWorkFlowForAdmin.class);

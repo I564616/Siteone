@@ -55,7 +55,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.common.collect.Lists;
 
-
 @Controller
 @RequestMapping("/search")
 public class AdvanceSearchPageController extends AbstractSearchPageController
