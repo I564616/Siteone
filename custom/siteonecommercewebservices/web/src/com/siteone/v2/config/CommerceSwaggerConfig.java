@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@PropertySource("classpath:/v2/swagger.properties")
+//@PropertySource("classpath:/v2/swagger.properties")
 @ImportResource(value = "classpath*:/swagger/swaggerintegration/web/spring/*-web-spring.xml")
 public class CommerceSwaggerConfig
 {
