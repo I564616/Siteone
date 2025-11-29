@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.annotation.Resource;
-import jakarta.imageio.ImageIO;
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 
