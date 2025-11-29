@@ -24,8 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Required;
-
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * This class provides hooks into the system's initialization and update processes.
@@ -33,103 +32,108 @@ import org.springframework.beans.factory.annotation.Required;
  * @see "https://wiki.hybris.com/display/release4/Hooks+for+Initialization+and+Update+Process"
  */
 @SystemSetup(extension = SiteoneTestConstants.EXTENSIONNAME)
-public class TestDataSystemSetup extends AbstractSystemSetup
+public class TestDataSystemSetup extends AbstractSystemSetup implements InitializingBean
 {
-	private static final Logger LOG = Logger.getLogger(TestDataSystemSetup.class);
+    private static final Logger LOG = Logger.getLogger(TestDataSystemSetup.class);
 
-	private static final String CREATE_TEST_DATA = "createTestData";
+    private static final String CREATE_TEST_DATA = "createTestData";
 
+    private AcceleratorTestOrderData acceleratorTestOrderData;
+    private boolean csvDataImport;
 
-	private AcceleratorTestOrderData acceleratorTestOrderData;
-	private boolean csvDataImport;
+    protected boolean isCsvDataImport()
+    {
+        return csvDataImport;
+    }
 
+    public void setCsvDataImport(final boolean csvDataImport)
+    {
+        this.csvDataImport = csvDataImport;
+    }
 
-	protected boolean isCsvDataImport()
-	{
-		return csvDataImport;
-	}
+    protected AcceleratorTestOrderData getAcceleratorTestOrderData()
+    {
+        return acceleratorTestOrderData;
+    }
 
-	@Required
-	public void setCsvDataImport(final boolean csvDataImport)
-	{
-		this.csvDataImport = csvDataImport;
-	}
+    public void setAcceleratorTestOrderData(final AcceleratorTestOrderData acceleratorTestOrderData)
+    {
+        this.acceleratorTestOrderData = acceleratorTestOrderData;
+    }
 
-	protected AcceleratorTestOrderData getAcceleratorTestOrderData()
-	{
-		return acceleratorTestOrderData;
-	}
+    /**
+     * Bean property verification for Spring 6
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        if (this.acceleratorTestOrderData == null)
+        {
+            throw new IllegalArgumentException("Property 'acceleratorTestOrderData' must be set");
+        }
+        // csvDataImport is primitive boolean, so no need to check for null
+    }
 
-	@Required
-	public void setAcceleratorTestOrderData(final AcceleratorTestOrderData acceleratorTestOrderData)
-	{
-		this.acceleratorTestOrderData = acceleratorTestOrderData;
-	}
+    /**
+     * Generates the Dropdown and Multi-select boxes for the projectdata import
+     */
+    @Override
+    @SystemSetupParameterMethod
+    public List<SystemSetupParameter> getInitializationOptions()
+    {
+        final List<SystemSetupParameter> params = new ArrayList<SystemSetupParameter>();
+        params.add(createBooleanSystemSetupParameter(CREATE_TEST_DATA, "Create Test Data", true));
+        return params;
+    }
 
-	/**
-	 * Generates the Dropdown and Multi-select boxes for the projectdata import
-	 */
-	@Override
-	@SystemSetupParameterMethod
-	public List<SystemSetupParameter> getInitializationOptions()
-	{
-		final List<SystemSetupParameter> params = new ArrayList<SystemSetupParameter>();
+    /**
+     * Implement this method to create initial objects. This method will be called by system creator during
+     * initialization and system update. Be sure that this method can be called repeatedly.
+     *
+     * @param context the context provides the selected parameters and values
+     */
+    @SystemSetup(type = Type.ESSENTIAL, process = Process.ALL)
+    public void createEssentialData(final SystemSetupContext context)
+    {
+        // No essential data to import for the sample data extension
+    }
 
-		params.add(createBooleanSystemSetupParameter(CREATE_TEST_DATA, "Create Test Data", true));
+    /**
+     * Implement this method to create data that is used in your project. This method will be called during the system
+     * initialization.
+     *
+     * @param context the context provides the selected parameters and values
+     */
+    @SystemSetup(type = Type.PROJECT, process = Process.ALL)
+    public void createProjectData(final SystemSetupContext context)
+    {
+        if (getBooleanSystemSetupParameter(context, CREATE_TEST_DATA))
+        {
+            if (isCsvDataImport())
+            {
+                getAcceleratorTestOrderData().generateCSVCustomersWithOrdersAndTickets();
+            }
+            else
+            {
+                LOG.info("Creating Test Users...");
+                importImpexFile(context, "/siteonetest/import/qa-test-users.impex");
 
-		return params;
-	}
+                LOG.info("Creating Reviews...");
+                importImpexFile(context, "/siteonetest/import/reviews.impex");
 
-	/**
-	 * Implement this method to create initial objects. This method will be called by system creator during
-	 * initialization and system update. Be sure that this method can be called repeatedly.
-	 *
-	 * @param context
-	 *           the context provides the selected parameters and values
-	 */
-	@SystemSetup(type = Type.ESSENTIAL, process = Process.ALL)
-	public void createEssentialData(final SystemSetupContext context)
-	{
-		// No essential data to import for the sample data extension
-	}
+                LOG.info("Creating Test Payment Subscriptions...");
+                getAcceleratorTestOrderData().createPaymentInfos();
 
-	/**
-	 * Implement this method to create data that is used in your project. This method will be called during the system
-	 * initialization.
-	 *
-	 * @param context
-	 *           the context provides the selected parameters and values
-	 */
-	@SystemSetup(type = Type.PROJECT, process = Process.ALL)
-	public void createProjectData(final SystemSetupContext context)
-	{
-		if (getBooleanSystemSetupParameter(context, CREATE_TEST_DATA))
-		{
-			if (isCsvDataImport())
-			{
-				getAcceleratorTestOrderData().generateCSVCustomersWithOrdersAndTickets();
-			}
-			else
-			{
-				LOG.info("Creating Test Users...");
-				importImpexFile(context, "/siteonetest/import/qa-test-users.impex");
+                LOG.info("Creating Test Orders...");
+                getAcceleratorTestOrderData().createSampleOrders();
+                getAcceleratorTestOrderData().createSampleBOPiSOrders();
 
-				LOG.info("Creating Reviews...");
-				importImpexFile(context, "/siteonetest/import/reviews.impex");
+                LOG.info("Creating CS Tickets...");
+                importImpexFile(context, "/siteonetest/import/cstickets.impex");
 
-				LOG.info("Creating Test Payment Subscriptions...");
-				getAcceleratorTestOrderData().createPaymentInfos();
-
-				LOG.info("Creating Test Orders...");
-				getAcceleratorTestOrderData().createSampleOrders();
-				getAcceleratorTestOrderData().createSampleBOPiSOrders();
-
-				LOG.info("Creating CS Tickets...");
-				importImpexFile(context, "/siteonetest/import/cstickets.impex");
-
-				LOG.info("Creating Test Quotes...");
-				importImpexFile(context, "/siteonetest/import/csquotes.impex");
-			}
-		}
-	}
+                LOG.info("Creating Test Quotes...");
+                importImpexFile(context, "/siteonetest/import/csquotes.impex");
+            }
+        }
+    }
 }
