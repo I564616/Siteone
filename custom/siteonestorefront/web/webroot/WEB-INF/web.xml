@@ -177,27 +177,29 @@
 		<url-pattern>/_ui/*</url-pattern>
 	</servlet-mapping>
 
-	<servlet>
-		<description>
-			DispatcherServlet
-			Spring MVC dispatcher servlet. This is the entry point for the Spring MVC application.
-		</description>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<description>
-				Specifies the location for Spring MVC to load an additional XML configuration file.
-				Because hybris is already configured with the XML spring configuration files to load
-				we must set this param value to EMPTY in order to prevent loading of the default
-				/WEB-INF/applicationContext.xml file.
-			</description>
-			<param-name>contextConfigLocation</param-name>
-			<param-value></param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+    <servlet>
+        <description>
+            DispatcherServlet
+            Spring MVC dispatcher servlet. This is the entry point for the Spring MVC application.
+            Spring MVC and Spring Security must share the same WebApplicationContext in Spring 6.x.
+        </description>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 
-	<servlet-mapping>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>
+                WEB-INF/config/spring-mvc-config.xml
+                WEB-INF/config/spring-security-config.xml
+                WEB-INF/config/web-application-config.xml
+            </param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+
+    <servlet-mapping>
 		<servlet-name>DispatcherServlet</servlet-name>
 		<!-- Map all requests to the DispatcherServlet -->
 		<url-pattern>/</url-pattern>
