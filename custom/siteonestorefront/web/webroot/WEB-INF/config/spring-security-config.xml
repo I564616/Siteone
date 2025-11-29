@@ -79,7 +79,9 @@
 
 	<!-- Path matcher to use, AntPathMatcher is the default -->
 	<alias name="antPathMatcher" alias="defaultPathMatcher" />
-	<bean id="antPathMatcher" class="org.springframework.util.AntPathMatcher" />
+    <bean id="defaultPathMatcher" class="org.springframework.util.AntPathMatcher" />
+
+    <bean id="mvcHandlerMappingIntrospector" class="org.springframework.web.servlet.handler.HandlerMappingIntrospector"/>
 
 
 
