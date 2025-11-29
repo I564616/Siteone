@@ -12,6 +12,7 @@ package com.siteone.conv;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.PriorityOrdered;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -20,7 +21,7 @@ import com.thoughtworks.xstream.XStream;
  * Sets default converter as a target of converter redirection in converters implementing {@link RedirectableConverter}
  * interface.
  */
-public class ConverterPostProcessor implements BeanPostProcessor
+public class ConverterPostProcessor implements BeanPostProcessor, PriorityOrdered
 {
 	private final XStream xStream;
 
@@ -51,5 +52,11 @@ public class ConverterPostProcessor implements BeanPostProcessor
 	{
 		return xStream;
 	}
+
+    @Override
+    public int getOrder()
+    {
+        return Integer.MAX_VALUE;
+    }
 
 }
