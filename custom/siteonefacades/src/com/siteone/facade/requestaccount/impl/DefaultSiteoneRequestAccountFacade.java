@@ -46,9 +46,9 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import jakarta.annotation.Resource;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import jakarta.crypto.Cipher;
+import jakarta.crypto.SecretKey;
+import jakarta.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.BooleanUtils;

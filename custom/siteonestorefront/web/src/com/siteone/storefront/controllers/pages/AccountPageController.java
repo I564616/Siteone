@@ -95,9 +95,9 @@ import java.util.Map;
 import java.util.Set;
 
 import jakarta.annotation.Resource;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import jakarta.crypto.Cipher;
+import jakarta.crypto.SecretKey;
+import jakarta.crypto.spec.SecretKeySpec;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

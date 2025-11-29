@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import jakarta.annotation.Resource;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.transform.stream.StreamResult;
+import jakarta.xml.datatype.DatatypeConfigurationException;
+import jakarta.xml.datatype.DatatypeFactory;
+import jakarta.xml.datatype.XMLGregorianCalendar;
+import jakarta.xml.transform.stream.StreamResult;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

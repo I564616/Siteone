@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import jakarta.xml.stream.XMLStreamException;
+import jakarta.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;

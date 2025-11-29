@@ -82,11 +82,11 @@ import java.util.stream.Collectors;
 import org.json.JSONObject;
 import org.json.JSONException;
 import jakarta.annotation.Resource;
-import javax.crypto.Cipher;
-import javax.crypto.Mac;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.crypto.SecretKey;
+import jakarta.crypto.Cipher;
+import jakarta.crypto.Mac;
+import jakarta.crypto.spec.IvParameterSpec;
+import jakarta.crypto.spec.SecretKeySpec;
+import jakarta.crypto.SecretKey;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
