@@ -82,18 +82,19 @@ import java.util.stream.Collectors;
 import org.json.JSONObject;
 import org.json.JSONException;
 import jakarta.annotation.Resource;
-import jakarta.crypto.Cipher;
-import jakarta.crypto.Mac;
-import jakarta.crypto.spec.IvParameterSpec;
-import jakarta.crypto.spec.SecretKeySpec;
-import jakarta.crypto.SecretKey;
+import javax.crypto.Cipher;
+import javax.crypto.Mac;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKey;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.log4j.Logger;
-import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+//import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.util.Assert;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
@@ -1697,7 +1698,7 @@ public class DefaultSiteOneCustomerFacade extends DefaultCustomerFacade implemen
 
 	@Override
 	public String verifyRecoveryToken(final String token)
-			throws InvalidTokenException, ResourceAccessException, TokenInvalidatedException, IllegalArgumentException
+			throws OAuth2AuthenticationException, ResourceAccessException, TokenInvalidatedException, IllegalArgumentException
 	{
 
 		String stateToken = StringUtils.EMPTY;
@@ -1727,13 +1728,13 @@ public class DefaultSiteOneCustomerFacade extends DefaultCustomerFacade implemen
 		catch (final OktaInvalidTokenException oktaInvalidTokenException)
 		{
 			LOG.error(oktaInvalidTokenException);
-			throw new InvalidTokenException(oktaInvalidTokenException.getMessage());
+			throw new OAuth2AuthenticationException(oktaInvalidTokenException.getMessage());
 		}
 		return stateToken;
 	}
 
 	@Override
-	public String resetPassword(final String token, final String newPassword) throws InvalidTokenException,
+	public String resetPassword(final String token, final String newPassword) throws OAuth2AuthenticationException,
 			PasswordPolicyViolationException, ResourceAccessException, RecentlyUsedPasswordException, TokenInvalidatedException
 	{
 		try
@@ -1756,7 +1757,7 @@ public class DefaultSiteOneCustomerFacade extends DefaultCustomerFacade implemen
 		catch (final OktaInvalidTokenException oktaInvalidTokenException)
 		{
 			LOG.error(oktaInvalidTokenException);
-			throw new InvalidTokenException(oktaInvalidTokenException.getMessage());
+			throw new OAuth2AuthenticationException(oktaInvalidTokenException.getMessage());
 		}
 		catch (final OktaInvalidPasswordException oktaInvalidPasswordException)
 		{
